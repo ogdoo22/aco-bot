@@ -1,0 +1,89 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                   ACO BOT - QUICK REFERENCE                       ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+📁 PROJECT LOCATION
+   /home/quint/aco-bot/
+
+🚀 START THE BOT
+   cd /home/quint/aco-bot
+   npm start
+
+📝 GET LOGS (for Claude)
+   tail -50 ~/.config/aco-bot/logs/$(ls -t ~/.config/aco-bot/logs/ | head -1)
+
+🔧 REBUILD (after code changes)
+   npm run build
+   npm start
+
+🌐 TEST PROXY
+   curl -x http://USER:PASS@gate.smartproxy.com:7000 https://api.ipify.org
+
+💰 CHECK 2CAPTCHA BALANCE
+   curl "https://2captcha.com/res.php?key=YOUR_KEY&action=getbalance"
+
+───────────────────────────────────────────────────────────────────────
+
+⚙️  FIRST TIME SETUP:
+   1. Edit .env with your credentials:
+      nano /home/quint/aco-bot/.env
+
+   2. Generate encryption key:
+      node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+
+   3. Test connections (commands above)
+
+   4. Start: npm start
+
+───────────────────────────────────────────────────────────────────────
+
+📚 DOCUMENTATION FILES:
+   STARTUP_CHECKLIST.md   - Step-by-step first run
+   HOW_TO_RUN.md          - How to start app
+   TUNING_GUIDE.md        - Optimize performance
+   WORKING_WITH_CLAUDE.md - Get help from Claude
+   README.md              - Full documentation
+
+───────────────────────────────────────────────────────────────────────
+
+🆘 COMMON ISSUES:
+
+   App won't start?
+   → npm run build && npm start
+
+   All tasks failing?
+   → Check .env credentials
+   → Test proxy connection
+   → Share logs with Claude
+
+   Need help?
+   → Share logs with Claude:
+     "Success rate: X%
+      Site: [URL]
+      Logs: [paste]
+      What to fix?"
+
+───────────────────────────────────────────────────────────────────────
+
+✅ SUCCESS CRITERIA:
+   • 60%+ success rate on drops
+   • Most failures = "out of stock"
+   • Bot detection < 10%
+   • Avg checkout time < 5s
+
+───────────────────────────────────────────────────────────────────────
+
+💬 MESSAGE CLAUDE:
+   "Hey Claude!
+
+   [Share logs + context]
+
+   What should I tune?"
+
+───────────────────────────────────────────────────────────────────────
+
+🎯 SAVE THIS FILE - Reference it every session!
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                    YOU'RE READY TO GO! 🚀                         ║
+╚═══════════════════════════════════════════════════════════════════╝

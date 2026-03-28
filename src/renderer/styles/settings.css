@@ -1,0 +1,216 @@
+/* Settings Page Styles */
+
+.settings-container {
+  max-width: 900px;
+}
+
+.settings-section {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.settings-section h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+  color: #00c896;
+}
+
+.section-description {
+  margin: 0 0 1.5rem 0;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.setting-item {
+  margin-bottom: 1.5rem;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #ddd;
+}
+
+.setting-item input {
+  width: 100%;
+  padding: 0.75rem;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+.setting-item input:focus {
+  outline: none;
+  border-color: #00c896;
+}
+
+.setting-value {
+  padding: 0.75rem;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+}
+
+.setting-value.mono {
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+.setting-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 150, 255, 0.1);
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.setting-info a {
+  color: #00c896;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.setting-info a:hover {
+  text-decoration: underline;
+}
+
+.setting-info ol {
+  margin: 0.5rem 0 0 1.5rem;
+  padding: 0;
+}
+
+.setting-info ol li {
+  margin: 0.3rem 0;
+}
+
+.setting-info p {
+  margin: 0.5rem 0;
+}
+
+/* BYOP Info Section */
+.byop-info-section {
+  background: rgba(255, 165, 0, 0.05);
+  border-color: rgba(255, 165, 0, 0.3);
+}
+
+.info-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 165, 0, 0.2);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.info-box h3 {
+  margin: 0 0 1rem 0;
+  color: #ffa500;
+  font-size: 1.1rem;
+}
+
+.info-box ul {
+  margin: 0 0 1rem 1.5rem;
+  padding: 0;
+}
+
+.info-box ul li {
+  margin: 0.5rem 0;
+  color: #ddd;
+}
+
+.info-box .learn-more {
+  margin: 1rem 0 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 165, 0, 0.2);
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.info-box code {
+  background: rgba(255, 165, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  color: #ffa500;
+}
+
+/* Save Message */
+.save-message {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.save-message.success {
+  background: rgba(0, 200, 150, 0.2);
+  border: 1px solid rgba(0, 200, 150, 0.4);
+  color: #00c896;
+}
+
+.save-message.error {
+  background: rgba(255, 68, 68, 0.2);
+  border: 1px solid rgba(255, 68, 68, 0.4);
+  color: #ff4444;
+}
+
+/* Action Buttons */
+.settings-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: #00c896;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #00e0a8;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  background: #333;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #444;
+  border-color: #555;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
