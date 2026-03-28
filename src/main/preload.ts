@@ -42,8 +42,18 @@ contextBridge.exposeInMainWorld('electron', {
   getSetting: (key: string) => ipcRenderer.invoke('settings:get', key),
   setSetting: (key: string, value: string) => ipcRenderer.invoke('settings:set', key, value),
 
+  // Monitors
+  createMonitor: (monitor: any) => ipcRenderer.invoke('monitor:create', monitor),
+  getAllMonitors: () => ipcRenderer.invoke('monitor:getAll'),
+  startMonitor: (monitorId: string) => ipcRenderer.invoke('monitor:start', monitorId),
+  stopMonitor: (monitorId: string) => ipcRenderer.invoke('monitor:stop', monitorId),
+  deleteMonitor: (monitorId: string) => ipcRenderer.invoke('monitor:delete', monitorId),
+
   // Event listeners
   onTaskUpdate: (callback: (data: any) => void) => {
     ipcRenderer.on('task:update', (_, data) => callback(data));
+  },
+  onMonitorUpdate: (callback: (data: any) => void) => {
+    ipcRenderer.on('monitor:update', (_, data) => callback(data));
   },
 });

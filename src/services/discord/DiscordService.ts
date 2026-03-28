@@ -117,6 +117,27 @@ export class DiscordService {
   }
 
   /**
+   * Send stock found notification from monitor
+   */
+  async sendStockFoundNotification(data: {
+    productName: string;
+    productUrl: string;
+    availableSizes: string[];
+    tasksStarted: number;
+  }): Promise<boolean> {
+    return this.sendNotification({
+      type: 'warning',
+      title: 'Stock Detected!',
+      description: `${data.productName} is now in stock!`,
+      fields: [
+        { name: 'Available Sizes', value: data.availableSizes.join(', '), inline: true },
+        { name: 'Tasks Started', value: String(data.tasksStarted), inline: true },
+        { name: 'Link', value: data.productUrl, inline: false },
+      ],
+    });
+  }
+
+  /**
    * Send test message
    */
   async sendTestMessage(): Promise<boolean> {

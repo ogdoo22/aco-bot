@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as crypto from 'crypto-js';
-import { Task, Profile, Proxy, TaskResult, Analytics } from '../shared/types';
+import { Task, Profile, Proxy, TaskResult, Analytics, Monitor, MonitorStatus } from '../shared/types';
 
 /**
  * Database manager for ACO Bot
@@ -476,6 +476,93 @@ export class ACODatabase {
       totalSpent: 0, // Will be calculated based on product prices
       estimatedRevenue: 0, // Will be calculated based on resale prices
       estimatedProfit: 0, // Revenue - Spent - Fees
+    };
+  }
+
+  // ==================== MONITORS ====================
+
+  createMonitor(monitor: Monitor): void {
+    const stmt = this.db.prepare(`
+      INSERT INTO monitors (id, site, product_url, product_name, sizes_json, profile_id, mode,
+                           poll_interval, status, last_checked, last_stock_state, tasks_created,
+                           error_message, created_at, started_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    stmt.run(
+      monitor.id,
+      monitor.site,
+      monitor.productUrl,
+      monitor.productName,
+      JSON.stringify(monitor.sizes),
+      monitor.profileId,
+      monitor.mode,
+      monitor.pollInterval,
+      monitor.status,
+      monitor.lastChecked,
+      monitor.lastStockState,
+      monitor.tasksCreated,
+      monitor.errorMessage,
+      monitor.createdAt,
+      monitor.startedAt
+    );
+  }
+
+  getMonitor(id: string): Monitor | null {
+    const stmt = this.db.prepare('SELECT * FROM monitors WHERE id = ?');
+    const row = stmt.get(id) as any;
+    if (!row) return null;
+    return this.mapMonitorFromRow(row);
+  }
+
+  getAllMonitors(): Monitor[] {
+    const stmt = this.db.prepare('SELECT * FROM monitors ORDER BY created_at DESC');
+    const rows = stmt.all() as any[];
+    return rows.map((row) => this.mapMonitorFromRow(row));
+  }
+
+  updateMonitorStatus(id: string, status: MonitorStatus, errorMessage?: string): void {
+    const stmt = this.db.prepare(`
+      UPDATE monitors SET status = ?, error_message = ?, started_at = COALESCE(started_at, ?)
+      WHERE id = ?
+    `);
+    stmt.run(status, errorMessage || null, status === 'monitoring' ? Date.now() : null, id);
+  }
+
+  updateMonitorLastChecked(id: string, lastChecked: number, stockState: string): void {
+    const stmt = this.db.prepare(`
+      UPDATE monitors SET last_checked = ?, last_stock_state = ? WHERE id = ?
+    `);
+    stmt.run(lastChecked, stockState, id);
+  }
+
+  incrementMonitorTasksCreated(id: string): void {
+    const stmt = this.db.prepare('UPDATE monitors SET tasks_created = tasks_created + 1 WHERE id = ?');
+    stmt.run(id);
+  }
+
+  deleteMonitor(id: string): void {
+    const stmt = this.db.prepare('DELETE FROM monitors WHERE id = ?');
+    stmt.run(id);
+  }
+
+  private mapMonitorFromRow(row: any): Monitor {
+    return {
+      id: row.id,
+      site: row.site,
+      productUrl: row.product_url,
+      productName: row.product_name,
+      sizes: JSON.parse(row.sizes_json),
+      profileId: row.profile_id,
+      mode: row.mode as any,
+      pollInterval: row.poll_interval,
+      status: row.status as any,
+      lastChecked: row.last_checked,
+      lastStockState: row.last_stock_state,
+      tasksCreated: row.tasks_created,
+      errorMessage: row.error_message,
+      createdAt: row.created_at,
+      startedAt: row.started_at,
     };
   }
 

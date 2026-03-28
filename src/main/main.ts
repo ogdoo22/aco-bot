@@ -5,9 +5,10 @@ import { randomBytes } from 'crypto';
 import { config } from 'dotenv';
 import { ACODatabase } from '../database/Database';
 import { TaskManager } from './TaskManager';
+import { MonitorManager } from './MonitorManager';
 import { ProxyManager } from '../services/proxy/ProxyManager';
 import { DiscordService } from '../services/discord/DiscordService';
-import { Task, Profile, Proxy } from '../shared/types';
+import { Task, Profile, Proxy, Monitor } from '../shared/types';
 import { initLogger, getLogger } from '../shared/Logger';
 
 // Load environment variables (no-op in packaged app, works in dev)
@@ -20,6 +21,7 @@ const logger = initLogger(logDir);
 let mainWindow: BrowserWindow | null = null;
 let database: ACODatabase | null = null;
 let taskManager: TaskManager | null = null;
+let monitorManager: MonitorManager | null = null;
 let proxyManager: ProxyManager | null = null;
 let discordService: DiscordService | null = null;
 let dbPath: string = '';
@@ -89,6 +91,7 @@ function initializeServices(): void {
   const discordWebhookUrl = database.getSetting('discordWebhookUrl') || process.env.DISCORD_WEBHOOK_URL || '';
   discordService = new DiscordService(discordWebhookUrl);
   taskManager = new TaskManager(database, proxyManager, discordService);
+  monitorManager = new MonitorManager(database, taskManager, proxyManager, discordService);
 
   logger.success('system', 'Services initialized', undefined, {
     dbPath,
@@ -192,6 +195,30 @@ function setupIPC(): void {
     return { success: true };
   });
 
+  // ==================== MONITORS ====================
+  ipcMain.handle('monitor:create', async (_, monitor: Monitor) => {
+    database?.createMonitor(monitor);
+    return { success: true };
+  });
+
+  ipcMain.handle('monitor:getAll', async () => {
+    return database?.getAllMonitors() || [];
+  });
+
+  ipcMain.handle('monitor:start', async (_, monitorId: string) => {
+    return await monitorManager?.startMonitor(monitorId);
+  });
+
+  ipcMain.handle('monitor:stop', async (_, monitorId: string) => {
+    return await monitorManager?.stopMonitor(monitorId);
+  });
+
+  ipcMain.handle('monitor:delete', async (_, monitorId: string) => {
+    await monitorManager?.stopMonitor(monitorId);
+    database?.deleteMonitor(monitorId);
+    return { success: true };
+  });
+
   // ==================== ANALYTICS ====================
   ipcMain.handle('analytics:get', async (_, startDate?: number, endDate?: number) => {
     return database?.getAnalytics(startDate, endDate);
@@ -250,6 +277,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', () => {
+  monitorManager?.stopAllMonitors();
   taskManager?.stopAllTasks();
   database?.close();
   console.log('✅ Cleanup complete');
@@ -260,4 +288,8 @@ app.on('before-quit', () => {
  */
 export function sendTaskUpdate(taskId: string, status: string, data?: any): void {
   mainWindow?.webContents.send('task:update', { taskId, status, data });
+}
+
+export function sendMonitorUpdate(monitorId: string, status: string, data?: any): void {
+  mainWindow?.webContents.send('monitor:update', { monitorId, status, data });
 }

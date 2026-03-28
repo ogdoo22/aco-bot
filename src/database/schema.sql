@@ -73,6 +73,28 @@ CREATE TABLE IF NOT EXISTS task_history (
   FOREIGN KEY (proxy_id) REFERENCES proxies(id)
 );
 
+-- Monitors table (stock watching)
+CREATE TABLE IF NOT EXISTS monitors (
+  id TEXT PRIMARY KEY,
+  site TEXT NOT NULL,
+  product_url TEXT NOT NULL,
+  product_name TEXT NOT NULL,
+  sizes_json TEXT NOT NULL,
+  profile_id TEXT NOT NULL,
+  mode TEXT NOT NULL CHECK(mode IN ('safe', 'fast', 'aggressive')),
+  poll_interval INTEGER NOT NULL DEFAULT 10000,
+  status TEXT NOT NULL CHECK(status IN ('idle', 'monitoring', 'stock_found', 'paused', 'error')),
+  last_checked INTEGER,
+  last_stock_state TEXT,
+  tasks_created INTEGER DEFAULT 0,
+  error_message TEXT,
+  created_at INTEGER NOT NULL,
+  started_at INTEGER,
+  FOREIGN KEY (profile_id) REFERENCES profiles(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_monitors_status ON monitors(status);
+
 -- App settings
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,

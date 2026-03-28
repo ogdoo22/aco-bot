@@ -1,0 +1,142 @@
+.monitors-page {
+  max-width: 1400px;
+}
+
+.monitors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.monitors-header h1 {
+  font-size: 2rem;
+}
+
+/* Monitor Creator */
+.monitor-creator {
+  background-color: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.monitor-creator h2 {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Monitor List */
+.monitor-list h2 {
+  margin-bottom: 1.5rem;
+}
+
+.monitors {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Monitor Card */
+.monitor-card {
+  background-color: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--bg-tertiary);
+  transition: all 0.2s;
+}
+
+.monitor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.monitor-card.status-idle {
+  border-left-color: var(--text-secondary);
+}
+
+.monitor-card.status-monitoring {
+  border-left-color: var(--accent);
+  animation: pulse-border 1.5s infinite;
+}
+
+.monitor-card.status-stock_found {
+  border-left-color: var(--success);
+}
+
+.monitor-card.status-paused {
+  border-left-color: var(--warning);
+}
+
+.monitor-card.status-error {
+  border-left-color: var(--danger);
+}
+
+.monitor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.monitor-header h3 {
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.monitor-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.monitor-status.status-idle {
+  background-color: rgba(160, 160, 160, 0.2);
+  color: var(--text-secondary);
+}
+
+.monitor-status.status-monitoring {
+  background-color: rgba(0, 153, 255, 0.2);
+  color: var(--accent);
+}
+
+.monitor-status.status-stock_found {
+  background-color: rgba(0, 255, 0, 0.2);
+  color: var(--success);
+}
+
+.monitor-status.status-paused {
+  background-color: rgba(255, 165, 0, 0.2);
+  color: var(--warning);
+}
+
+.monitor-status.status-error {
+  background-color: rgba(255, 68, 68, 0.2);
+  color: var(--danger);
+}
+
+.monitor-details {
+  margin-bottom: 1rem;
+}
+
+.monitor-details p {
+  margin-bottom: 0.25rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.monitor-error {
+  color: var(--danger) !important;
+}
+
+.monitor-actions {
+  display: flex;
+  gap: 0.5rem;
+}

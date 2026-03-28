@@ -5,6 +5,7 @@
 export type TaskStatus = 'idle' | 'running' | 'success' | 'failed' | 'retrying';
 export type ProxyType = 'residential' | 'datacenter' | 'isp';
 export type CheckoutMode = 'safe' | 'fast' | 'aggressive';
+export type MonitorStatus = 'idle' | 'monitoring' | 'stock_found' | 'paused' | 'error';
 
 /**
  * Task configuration for a single checkout attempt
@@ -94,6 +95,44 @@ export interface Proxy {
   lastTested: number | null;
   isActive: boolean;
   createdAt: number;
+}
+
+/**
+ * Monitor configuration for watching product stock
+ */
+export interface Monitor {
+  id: string;
+  site: string;
+  productUrl: string;
+  productName: string;
+  sizes: string[];
+  profileId: string;
+  mode: CheckoutMode;
+  pollInterval: number;
+  status: MonitorStatus;
+  lastChecked: number | null;
+  lastStockState: string | null;
+  tasksCreated: number;
+  errorMessage: string | null;
+  createdAt: number;
+  startedAt: number | null;
+}
+
+/**
+ * Stock check result from a monitor poll
+ */
+export interface VariantStock {
+  id: number;
+  title: string;
+  available: boolean;
+  price: string;
+}
+
+export interface StockCheckResult {
+  inStock: boolean;
+  availableVariants: VariantStock[];
+  allVariants: VariantStock[];
+  timestamp: number;
 }
 
 /**

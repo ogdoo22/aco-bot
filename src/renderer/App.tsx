@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Dashboard from './pages/Dashboard';
+import Monitors from './pages/Monitors';
 import Profiles from './pages/Profiles';
 import Proxies from './pages/Proxies';
 import Settings from './pages/Settings';
 import './styles/App.css';
 
-type Page = 'dashboard' | 'profiles' | 'proxies' | 'settings';
+type Page = 'dashboard' | 'monitors' | 'profiles' | 'proxies' | 'settings';
 
 /**
  * Main application component
@@ -17,6 +18,8 @@ function App(): JSX.Element {
     switch (currentPage) {
       case 'dashboard':
         return <Dashboard />;
+      case 'monitors':
+        return <Monitors />;
       case 'profiles':
         return <Profiles />;
       case 'proxies':
@@ -44,6 +47,14 @@ function App(): JSX.Element {
           >
             <span className="icon">📊</span>
             Dashboard
+          </button>
+
+          <button
+            className={`nav-item ${currentPage === 'monitors' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('monitors')}
+          >
+            <span className="icon">👁</span>
+            Monitors
           </button>
 
           <button
