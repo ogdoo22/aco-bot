@@ -7,11 +7,12 @@
     "dev": "concurrently \"npm run dev:main\" \"npm run dev:renderer\"",
     "dev:main": "tsc -p tsconfig.main.json && electron .",
     "dev:renderer": "vite",
+    "postinstall": "electron-builder install-app-deps",
     "build": "npm run build:main && npm run build:renderer",
-    "build:main": "tsc -p tsconfig.main.json",
+    "build:main": "tsc -p tsconfig.main.json && cp src/database/schema.sql dist/main/database/schema.sql",
     "build:renderer": "vite build",
     "start": "electron .",
-    "package": "electron-builder",
+    "package": "npm run build && electron-builder --win",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit"
   },
@@ -30,9 +31,7 @@
     "date-fns": "^3.3.1",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
-    "playwright": "^1.42.1",
-    "playwright-extra": "^4.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "playwright-core": "^1.58.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -68,6 +67,9 @@
       "dist/**/*",
       "package.json"
     ],
+    "asarUnpack": [
+      "**/*.node"
+    ],
     "mac": {
       "target": [
         "dmg",
@@ -77,9 +79,13 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "zip"
+        "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
     },
     "linux": {
       "target": [

@@ -1,5 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { randomBytes } from 'crypto';
 import { config } from 'dotenv';
 import { ACODatabase } from '../database/Database';
 import { TaskManager } from './TaskManager';
@@ -8,7 +10,7 @@ import { DiscordService } from '../services/discord/DiscordService';
 import { Task, Profile, Proxy } from '../shared/types';
 import { initLogger, getLogger } from '../shared/Logger';
 
-// Load environment variables
+// Load environment variables (no-op in packaged app, works in dev)
 config();
 
 // Initialize logger
@@ -58,15 +60,34 @@ function createWindow(): void {
 }
 
 /**
+ * Get or create encryption key, persisted in userData
+ */
+function getOrCreateEncryptionKey(): string {
+  if (process.env.ENCRYPTION_KEY) {
+    return process.env.ENCRYPTION_KEY;
+  }
+
+  const keyPath = join(app.getPath('userData'), '.encryption-key');
+  if (existsSync(keyPath)) {
+    return readFileSync(keyPath, 'utf-8').trim();
+  }
+
+  const newKey = randomBytes(32).toString('hex');
+  writeFileSync(keyPath, newKey, { mode: 0o600 });
+  return newKey;
+}
+
+/**
  * Initialize services
  */
 function initializeServices(): void {
   dbPath = join(app.getPath('userData'), 'aco-bot.db');
-  const encryptionKey = process.env.ENCRYPTION_KEY || 'default-encryption-key-change-me';
+  const encryptionKey = getOrCreateEncryptionKey();
 
   database = new ACODatabase(dbPath, encryptionKey);
   proxyManager = new ProxyManager(database);
-  discordService = new DiscordService(process.env.DISCORD_WEBHOOK_URL || '');
+  const discordWebhookUrl = database.getSetting('discordWebhookUrl') || process.env.DISCORD_WEBHOOK_URL || '';
+  discordService = new DiscordService(discordWebhookUrl);
   taskManager = new TaskManager(database, proxyManager, discordService);
 
   logger.success('system', 'Services initialized', undefined, {

@@ -1,4 +1,4 @@
-import { chromium, Browser, BrowserContext, Page } from 'playwright';
+import { chromium, Browser, BrowserContext, Page } from 'playwright-core';
 import { Task, Profile, Proxy } from '../../shared/types';
 import { applyStealthPatches } from '../stealth/StealthPatches';
 import { humanDelay, randomDelay } from '../utils/delays';
@@ -17,9 +17,9 @@ export class ShopifyAutomation {
   private taskId: string = '';
   private startTime: number = 0;
 
-  constructor(proxy: Proxy | null) {
+  constructor(proxy: Proxy | null, captchaApiKey: string = '') {
     this.proxy = proxy;
-    this.captchaService = new CaptchaService(process.env.TWOCAPTCHA_API_KEY || '');
+    this.captchaService = new CaptchaService(captchaApiKey || process.env.TWOCAPTCHA_API_KEY || '');
   }
 
   /**
@@ -177,7 +177,15 @@ export class ShopifyAutomation {
       };
     }
 
-    this.browser = await chromium.launch(launchOptions);
+    // Use system Edge or Chrome instead of bundled Chromium
+    launchOptions.channel = 'msedge';
+    try {
+      this.browser = await chromium.launch(launchOptions);
+    } catch {
+      // Fall back to Chrome if Edge is not available
+      launchOptions.channel = 'chrome';
+      this.browser = await chromium.launch(launchOptions);
+    }
 
     this.context = await this.browser.newContext({
       viewport: { width: 1920, height: 1080 },

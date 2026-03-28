@@ -143,11 +143,13 @@ export class TaskManager {
       // Execute based on site
       let orderNumber: string | null = null;
 
+      const captchaApiKey = this.database.getSetting('twoCaptchaApiKey') || '';
+
       if (task.site === 'shopify') {
-        const shopifyBot = new ShopifyAutomation(proxy);
+        const shopifyBot = new ShopifyAutomation(proxy, captchaApiKey);
         orderNumber = await shopifyBot.checkout(task, profile, signal);
       } else if (task.site === 'walmart') {
-        const walmartBot = new WalmartAutomation(proxy);
+        const walmartBot = new WalmartAutomation(proxy, captchaApiKey);
         orderNumber = await walmartBot.checkout(task, profile, signal);
       } else {
         throw new Error(`Unsupported site: ${task.site}`);
