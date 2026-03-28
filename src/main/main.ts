@@ -209,6 +209,10 @@ function setupIPC(): void {
 
   ipcMain.handle('settings:set', async (_, key: string, value: string) => {
     database?.setSetting(key, value);
+    // Update running services when their settings change
+    if (key === 'discordWebhookUrl' && discordService) {
+      discordService.setWebhookUrl(value);
+    }
     return { success: true };
   });
 

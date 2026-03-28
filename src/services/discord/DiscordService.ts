@@ -11,6 +11,10 @@ export class DiscordService {
     this.webhookUrl = webhookUrl;
   }
 
+  setWebhookUrl(url: string): void {
+    this.webhookUrl = url;
+  }
+
   /**
    * Send a Discord notification
    */
